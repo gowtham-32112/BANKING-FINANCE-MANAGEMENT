@@ -1,8 +1,9 @@
 import React from 'react'
+import Button from '@mui/material/Button';
 
 const Counsellor = () => {
   return (
-    <div>Counsellor</div>
+    <div>WELCOME TO KLU</div>
   )
 }
 

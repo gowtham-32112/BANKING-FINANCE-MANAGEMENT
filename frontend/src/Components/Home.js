@@ -28,7 +28,7 @@ const Home = () => {
   return (
     
     <div >
-      <FetchRegistrations/>
+      <ContactForm/>
       {/* <MyComponent/> */}
       {/* <FCounter/> */}
       
@@ -41,10 +41,8 @@ const Home = () => {
       <TodoList todos={todoItems} /> 
     <ProductList products={products} />
     <Message/> */}
-    {/* <Counter/> */}
-    {/* <Link href="/ContactForm" variant='body2'>
-      contact us
-    </Link> */}
+     <Counter/> 
+     <Link href="/ContactForm" variant='body2'>contact us</Link> 
     </div>
   )
 }
