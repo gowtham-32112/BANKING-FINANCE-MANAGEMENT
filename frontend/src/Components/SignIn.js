@@ -24,11 +24,13 @@ export default function SignIn() {
     password: '',
   });
   const [error, setError] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value,
+      [name]: value,
     });
   };
 
@@ -38,20 +40,21 @@ export default function SignIn() {
     axios.post('http://localhost:8080/login', formData)
       .then((response) => {
         console.log(response.data);
-        // Here you can handle the response from the server
-        // For example, check if the response indicates successful login
         if (response.data.success) {
-          navigate('/Success'); // Redirect to success page
+          navigate('/Success');
         } else {
-          setError(response.data.message); // Set error message if login failed
+          setError(response.data.message);
         }
       })
       .catch((error) => {
         console.error('Error logging in:', error);
-        setError('An error occurred while logging in'); // Set generic error message
-        navigate('/Success');
+        setError('An error occurred while logging in');
       });
   };
+
+  React.useEffect(() => {
+    setIsFormValid(formData.email && formData.password);
+  }, [formData.email, formData.password]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -123,7 +126,14 @@ export default function SignIn() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: '#FFCC00', color: '#000000' }} // Set button color to bright yellow
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: '#FFCC00',
+                  color: '#000000',
+                  pointerEvents: isFormValid ? 'auto' : 'none', // Disable button if form is invalid
+                  opacity: isFormValid ? 1 : 0.5, // Reduce opacity if form is invalid
+                }}
               >
                 Sign In
               </Button>

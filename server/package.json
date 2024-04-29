@@ -6,7 +6,9 @@
   "proxy": "http://localhost:8085",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index"
+    "dev": "nodemon index",
+    "build": "npm i"
+    
   },
   "author": "Nitish Kola",
   "license": "ISC",

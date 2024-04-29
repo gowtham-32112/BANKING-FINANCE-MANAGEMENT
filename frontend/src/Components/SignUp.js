@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,38 +23,53 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    if (name === 'name') setName(value);
+    else if (name === 'role') setRole(value);
+    else if (name === 'email') setEmail(value);
+    else if (name === 'password') setPassword(value);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      role: data.get('role'),
-      email: data.get('email'),
-      password: data.get('password'),
+    if (!name || !role || !email || !password) {
+      alert('Please fill out all fields.');
+      return;
+    }
+    axios.post('http://localhost:8080/register', {
+      name,
+      role,
+      email,
+      password,
+    }).then((res) => {
+      console.log(res.data);
+      navigate('/Success');
     });
-    axios.post('http://localhost:8080/register',{
-      name: data.get('name'),
-      role: data.get('role'),
-      email: data.get('email'),
-      password: data.get('password'),
-    }).then(res=>{
-      console.log(res.data)
-    });
-    navigate('/Success');
   };
 
-  const [role, setRole] = React.useState('');
-
-  const handleChange = (event) => {
+  const handleRoleChange = (event) => {
     setRole(event.target.value);
   };
+
+  // Check if all fields are filled
+  React.useEffect(() => {
+    setIsFormValid(name && role && email && password);
+  }, [name, role, email, password]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <div
         className="signup-bg"
         style={{
-          backgroundImage: "url('https://th.bing.com/th/id/OIG2.b1J_u7E3eXz3GFiz_odk?pid=ImgGn')",
+          backgroundImage:
+            "url('https://th.bing.com/th/id/OIG2.b1J_u7E3eXz3GFiz_odk?pid=ImgGn')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           height: '100vh',
@@ -94,26 +109,28 @@ export default function SignUp() {
                     id="name"
                     label="Name"
                     autoFocus
+                    onChange={handleFormChange}
                     InputLabelProps={{ style: { color: 'white' } }} // Set label color to white
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label" style={{ color: 'white' }}>Role</InputLabel>
+                      <InputLabel id="demo-simple-select-label" style={{ color: 'white' }}>
+                        Role
+                      </InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        name='role'
+                        name="role"
                         value={role}
                         label="Role"
-                        onChange={handleChange}
+                        onChange={handleRoleChange}
                         style={{ color: 'white' }} // Set select text color to white
                       >
                         <MenuItem value={1}>Customer</MenuItem>
                         <MenuItem value={2}>Student</MenuItem>
                         <MenuItem value={3}>Management</MenuItem>
-                        <MenuItem value={3}>Others..</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>
@@ -126,6 +143,7 @@ export default function SignUp() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    onChange={handleFormChange}
                     InputLabelProps={{ style: { color: 'white' } }} // Set label color to white
                   />
                 </Grid>
@@ -138,6 +156,7 @@ export default function SignUp() {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    onChange={handleFormChange}
                     InputLabelProps={{ style: { color: 'white' } }} // Set label color to white
                   />
                 </Grid>
@@ -153,7 +172,14 @@ export default function SignUp() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2, backgroundColor: '#FFCC00', color: '#000000' }} // Set button color to bright yellow
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: '#FFCC00',
+                  color: '#000000',
+                  pointerEvents: isFormValid ? 'auto' : 'none', // Disable button if form is invalid
+                  opacity: isFormValid ? 1 : 0.5, // Reduce opacity if form is invalid
+                }}
               >
                 Sign Up
               </Button>

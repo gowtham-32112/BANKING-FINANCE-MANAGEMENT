@@ -1,6 +1,5 @@
 import React from 'react';
 import './Dashboard.css';
-import MoneyIcon from '@mui/icons-material/Money';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +8,6 @@ const Dashboard = () => {
     <><div><center><h1>BANKING & FINANCE MANAGEMENT SYSTEM</h1></center></div>
     <div className='dashboard-bg'></div>
     <div className="deposit-button-container">
-      
         <Button component={Link}
           type="submit"
           fullWidth
